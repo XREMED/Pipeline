@@ -1,0 +1,6 @@
+cutadapt
+pysam
+numpy
+pandas
+jinja2
+mappy==2.24

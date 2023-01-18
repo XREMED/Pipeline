@@ -1,0 +1,41 @@
+import argparse
+
+from __init__ import __VERSION__, ASSAY_DICT
+import pipeline.toolkits.utils as utils
+
+
+class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter):
+    pass
+
+def main():
+    """celescope cli
+    """
+    parser = argparse.ArgumentParser(description='pipeline',formatter_class=ArgFormatter)
+    parser.add_argument('-v', '--version', action='version', version=__VERSION__)
+    subparsers = parser.add_subparsers()
+
+    for assay in ASSAY_DICT:
+        text = ASSAY_DICT[assay]
+        subparser_1st = subparsers.add_parser(assay, description=text)
+        # add 2ed subparser
+        subparser_2ed = subparser_1st.add_subparsers()
+
+        # import __STEPS__
+        init_module = utils.find_assay_init(assay)
+        __STEPS__ = init_module.__STEPS__
+
+        for step in __STEPS__:
+            # import function and opts
+            step_module = utils.find_step_module(assay, step)
+            func = getattr(step_module, step)
+            func_opts = getattr(step_module, f"get_{step}_para")
+            parser_step = subparser_2ed.add_parser(step, formatter_class=ArgFormatter)
+            func_opts(parser_step)
+            parser_step.set_defaults(func=func)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == '__main__':
+    main()
