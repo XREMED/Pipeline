@@ -1,1 +1,3 @@
-__STEPS__ = ['barcode']
+__STEPS__ = ['barcode', 'trim', 'mapping', 'featureCounts', 'count', 'allinone']
+__ASSAY__ = 'drug'
+

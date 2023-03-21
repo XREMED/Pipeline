@@ -9,7 +9,7 @@ with open('requirements.txt') as fp:
 
 entrys = ['pipeline=pipeline.pipeline:main',]
 # for assay in ASSAY_DICT:
-#     entrys.append(f'multi_{assay}=celescope.{assay}.multi_{assay}:main')
+#     entrys.append(f'multi_{assay}=pipeline.{assay}.multi_{assay}:main')
 entry_dict = {
         'console_scripts': entrys,
 }

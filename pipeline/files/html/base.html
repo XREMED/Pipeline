@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/plotly-1.58.4.min.js"></script>
+</head>
+<body>
+    <header class="navbar navbar-fixed-top" style="background: #ffffff">
+        <div class="navbar-brand">
+          {% include "html/common/logo.html"%}
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 align="center">Report</h1>
+
+        {% if barcode_summary is defined %}
+        {% include "html/common/barcode_summary.html"%}
+        {% endif %}
+
+        {% if cutadapt_summary is defined %}
+        {% include "html/common/cutadapt_summary.html"%}
+        {% endif %}
+
+        {% if star_summary is defined %}
+        {% include "html/rna/star_summary.html"%}
+        {% endif %}
+
+        {% if featureCounts_summary is defined%}
+        {% include "html/rna/featureCounts_summary.html"%}
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,6 +1,5 @@
-cutadapt
-pysam
-numpy
-pandas
-jinja2
+cutadapt==1.18
+numpy==1.21.6
+pandas==1.3.5
+jinja2==3.1.2
 mappy==2.24

@@ -1,9 +1,10 @@
+import importlib
 import logging
 import os
+import re
 import sys
-import importlib
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import timedelta
 from functools import wraps
 
@@ -122,17 +123,18 @@ def check_file(file_list):
     if isinstance(file_list, list):
         for file in file_list:
             if not os.path.exists(file):
-                s += file
+                s += f' {file}'
             else:
                 continue
-        
-        if not s == 'No such file(s): ':
-            raise FileNotFoundError(s)
-        else:
-            pass
     else:
         if not os.path.exists(file_list):
-            raise FileNotFoundError(f'{s}{file_list}!')
+            s += file_list
+
+    if not s == 'No such file(s): ':
+        raise FileNotFoundError(s)
+    else:
+        pass
+
     
 def check_dir(dirs):
     if isinstance(dirs, list):
@@ -144,3 +146,74 @@ def check_dir(dirs):
     else:
         if not os.path.exists(dirs):
             os.system(f'mkdir -p {dirs}')
+            
+def iter_readline(file):
+    with open(file, 'r') as f:
+        while True:
+            line = f.readline()
+            if line:
+                yield line
+            else:
+                return
+            
+            
+def get_id_name_dict(gtf_file):
+    """
+    get gene_id:gene_name from gtf file
+        - one gene_name with multiple gene_id: "_{count}" will be added to gene_name.
+        - one gene_id with multiple gene_name: error.
+        - duplicated (gene_name, gene_id): ignore duplicated records and print a warning.
+    Returns:
+        {gene_id: gene_name} dict
+    """
+
+    gene_id_pattern = re.compile(r'gene_id "(\S+)";')
+    gene_name_pattern = re.compile(r'gene_name "(\S+)"')
+    id_name = {}
+    c = Counter()
+    with open(gtf_file) as f:
+        for line in f:
+            if not line.strip():
+                continue
+            if line.startswith('#'):
+                continue
+            tabs = line.split('\t')
+            gtf_type, attributes = tabs[2], tabs[-1]
+            if gtf_type == 'gene':
+                gene_id = gene_id_pattern.findall(attributes)[-1]
+                gene_names = gene_name_pattern.findall(attributes)
+                if not gene_names:
+                    gene_name = gene_id 
+                else:
+                    gene_name = gene_names[-1]
+                c[gene_name] += 1
+                if c[gene_name] > 1:
+                    if gene_id in id_name:
+                        assert id_name[gene_id] == gene_name, (
+                                'one gene_id with multiple gene_name '
+                                f'gene_id: {gene_id}, '
+                                f'gene_name this line: {gene_name}'
+                                f'gene_name previous line: {id_name[gene_id]}'
+                            )
+                        get_id_name_dict.logger.warning(
+                                'duplicated (gene_id, gene_name)'
+                                f'gene_id: {gene_id}, '
+                                f'gene_name {gene_name}'
+                            )
+                        c[gene_name] -= 1
+                    else:
+                        gene_name = f'{gene_name}_{c[gene_name]}'
+                id_name[gene_id] = gene_name
+    return id_name
+
+
+def hamming_distance(string1, string2):
+    distance = 0
+    length = len(string1)
+    length2 = len(string2)
+    if (length != length2):
+        raise Exception(f"string1({length}) and string2({length2}) do not have same length")
+    for i in range(length):
+        if string1[i] != string2[i]:
+            distance += 1
+    return distance

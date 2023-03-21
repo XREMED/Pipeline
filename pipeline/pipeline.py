@@ -30,7 +30,7 @@ def main():
             func = getattr(step_module, step)
             func_opts = getattr(step_module, f"get_{step}_para")
             parser_step = subparser_2ed.add_parser(step, formatter_class=ArgFormatter)
-            func_opts(parser_step)
+            func_opts(parser_step, optional=True)
             parser_step.set_defaults(func=func)
 
     args = parser.parse_args()
