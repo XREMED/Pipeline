@@ -1,12 +1,15 @@
-import pandas as pd
-from glob import glob
+import argparse
 import os
 from collections import defaultdict
-import argparse
-from pipeline.toolkits import utils
-from pipeline.pipeline import ArgFormatter
-from pipeline.drug.__init__ import __STEPS__
 from concurrent.futures import ProcessPoolExecutor
+from glob import glob
+
+import pandas as pd
+
+from pipeline.drug.__init__ import __STEPS__
+from pipeline.pipeline import ArgFormatter
+from pipeline.toolkits import utils
+
 
 def get_fq(path, end='1'):
     suffixs = ['.gz', '.gzip', '']
@@ -72,7 +75,7 @@ class ALLINONE:
         self.sample_dict = parse_SampleInfo(self.sample_info)
         self.outdir_dict = defaultdict()
         
-        for s in __STEPS__:
+        for s in __STEPS__[:-1]:
             idx = __STEPS__.index(s) + 1
             self.outdir_dict[s] = f'{self.outdir}/{"%02d" %idx}.{s}' 
              

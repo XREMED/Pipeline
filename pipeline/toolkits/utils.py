@@ -112,7 +112,7 @@ def find_step_module(assay, step):
          
 def common_args(parser):
     ### 这是一些通用的参数。
-    parser.add_argument("-s", "--sample", help="Sample name", required=True)
+    parser.add_argument("-s", "--sample", help="Sample name")
     parser.add_argument("-o", "--outdir", help="Output directory.", default='./')
     parser.add_argument("-t", "--thread", help="Number of threads for each step.", default=5)
     return parser
