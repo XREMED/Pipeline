@@ -1,6 +1,6 @@
 import argparse
 
-from __init__ import __VERSION__, ASSAY_DICT
+from pipeline.__init__ import __VERSION__, ASSAY_DICT
 import pipeline.toolkits.utils as utils
 
 

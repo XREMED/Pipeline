@@ -30,6 +30,7 @@ def parse_SampleInfo(sample_info_file_path, ) -> dict:
     samples = df.sample_path.tolist()
     sample_dict = defaultdict(dict)
     for s in samples:
+        print(s)
         num = s.split('/')[-1]
         fq1 = get_fq(s, '1')
         s1 = ' '.join(fq1)

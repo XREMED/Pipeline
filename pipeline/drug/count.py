@@ -137,7 +137,7 @@ class COUNT():
             'UMI': 'count',
             'geneID': 'nunique'
         })
-        df_sum.columns = ['Barcode', 'readcount', 'UMI2', 'UMI', 'geneID']
+        df_sum.columns = ['Barcode', 'readcount', 'UMI2', 'UMI', 'GeneCount']
         df_sum = df_sum.sort_values(col, ascending=False)
         return df_sum
     
@@ -153,25 +153,6 @@ class COUNT():
         mtx.insert(0, 'gene_name', mtx['gene_id'].apply(lambda x: self.id_name[x]))
         
         mtx.to_csv(self.count_matrix, sep='\t', index=False)
-
-
-    @utils.logit
-    def plot_violin(self, df_sum):
-        fig = go.Figure()
-        fig = make_subplots(rows=1,  
-                        cols=3,  
-                        subplot_titles=["Read count", 
-                                        "UMI count", 
-                                        "trace2的标题", 
-                                        "trace3的标题"], 
-                    )
-        for i in ['readcount', 'UMI', 'geneID']:
-            fig.add_trace(go.Violin(y=df_sum[i],
-                                    x=i,
-                                    name=i,
-                                    box_visible=True,
-                                    meanline_visible=True))
-        fig.update_layout()
         
 
     @utils.logit
