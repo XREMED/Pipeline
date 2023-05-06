@@ -2,7 +2,7 @@ from pipeline.toolkits import utils
 from pipeline.__init__ import ROOT_DIR
 import subprocess
 
-ANA_TOOLS = f'{ROOT_DIR}/analysis.R'
+ANA_TOOLS = f'{ROOT_DIR}/toolkits/analysis.R'
 
 class ANALYSIS:
     def __init__(self, args, step):
